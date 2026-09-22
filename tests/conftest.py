@@ -4,10 +4,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
-BASE_URL = "https://qa-stellarburgers.education-services.ru/"
-
-TEST_EMAIL = "alexandra5368@mail.ru"
-TEST_PASSWORD = "1234566778"
+from config import BASE_URL, TEST_EMAIL, TEST_PASSWORD
+from pages.main_page import MainPage
+from pages.login_page import LoginPage
 
 
 @pytest.fixture(params=["chrome", "firefox"], scope="function")
@@ -31,18 +30,12 @@ def driver(request):
 
 @pytest.fixture
 def authorized_driver(driver):
-    from pages.main_page import MainPage
-    from pages.login_page import LoginPage
-
     main_page = MainPage(driver)
     login_page = LoginPage(driver)
 
     main_page.go_to_profile()
-
     login_page.login(TEST_EMAIL, TEST_PASSWORD)
-
-    assert main_page.is_order_button_visible(), \
-        "Авторизация не удалась: кнопка «Оформить заказ» не появилась"
+    main_page.wait_order_button_visible()
 
     return driver
 

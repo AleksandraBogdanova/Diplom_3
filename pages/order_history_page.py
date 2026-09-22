@@ -1,28 +1,21 @@
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
 from locators import OrderHistoryPageLocators
 from .base_page import BasePage
+import allure
 
 
 class OrderHistoryPage(BasePage):
 
+    @allure.step("Проверить, что страница истории заказов открыта")
     def is_loaded(self, timeout: int = 10) -> bool:
-        try:
-            WebDriverWait(self.driver, timeout).until(
-                EC.url_contains("/account/order-history")
-            )
-            return True
-        except TimeoutException:
-            return False
+        return self.wait_url_contains("/account/order-history", timeout=timeout)
 
-    def wait_orders_loaded(self, timeout: int = 15) -> None:
-        WebDriverWait(self.driver, timeout).until(
-            EC.presence_of_element_located(
-                OrderHistoryPageLocators.ORDER_LINKS
-            )
+    @allure.step("Ждать загрузки списка заказов")
+    def wait_orders_loaded(self, timeout: int = 15):
+        self.wait_element_visible(
+            OrderHistoryPageLocators.ORDER_LINKS, timeout=timeout
         )
 
+    @allure.step("Получить номера заказов из истории")
     def get_order_numbers(self) -> list:
         self.wait_orders_loaded()
         links = self.find_all(OrderHistoryPageLocators.ORDER_LINKS)
@@ -43,8 +36,10 @@ class OrderHistoryPage(BasePage):
                     break
         return numbers
 
+    @allure.step("Получить количество заказов в истории")
     def get_orders_count(self) -> int:
         return len(self.find_all(OrderHistoryPageLocators.ORDER_ITEMS))
 
+    @allure.step("Проверить, что история заказов пуста")
     def is_empty(self) -> bool:
         return self.get_orders_count() == 0
