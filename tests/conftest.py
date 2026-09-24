@@ -3,8 +3,11 @@ import allure
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from config import BASE_URL, TEST_EMAIL, TEST_PASSWORD
+from locators import MainPageLocators
 from pages.main_page import MainPage
 from pages.login_page import LoginPage
 
@@ -35,7 +38,14 @@ def authorized_driver(driver):
 
     main_page.go_to_profile()
     login_page.login(TEST_EMAIL, TEST_PASSWORD)
-    main_page.wait_order_button_visible()
+
+    WebDriverWait(driver, 10).until(
+        EC.url_changes(driver.current_url)
+    )
+
+    WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located(MainPageLocators.ORDER_BUTTON)
+    )
 
     return driver
 

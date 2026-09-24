@@ -1,5 +1,8 @@
-from selenium.webdriver.common.by import By
-from locators import HeaderLocators, MainPageLocators
+from locators import (
+    CommonLocators,
+    HeaderLocators,
+    MainPageLocators,
+)
 from .base_page import BasePage
 import allure
 
@@ -32,12 +35,9 @@ class MainPage(BasePage):
 
     @allure.step("Клик по ингредиенту с индексом {index}")
     def click_ingredient(self, index: int = 0):
-        self.wait_element_visible(
-            MainPageLocators.INGREDIENT_CARD, timeout=10
-        )
-        self.wait_element_invisible(
-            (By.CSS_SELECTOR, "[class*='Modal_modal_overlay']"), timeout=5
-        )
+        self.wait_element_visible(MainPageLocators.INGREDIENT_CARD, timeout=10)
+        self.wait_element_invisible(CommonLocators.MODAL_OVERLAY, timeout=10)
+
         cards = self.find_all(MainPageLocators.INGREDIENT_CARD)
         if not cards:
             raise AssertionError("На странице нет ни одного ингредиента")
@@ -45,7 +45,11 @@ class MainPage(BasePage):
             raise AssertionError(
                 f"Индекс {index} вне диапазона: ингредиентов {len(cards)}"
             )
-        cards[index].click()
+
+        try:
+            cards[index].click()
+        except Exception:
+            self.execute_script("arguments[0].click();", cards[index])
 
     @allure.step("Закрыть модальное окно ингредиента")
     def close_ingredient_modal(self):
@@ -61,7 +65,16 @@ class MainPage(BasePage):
 
     @allure.step("Перетащить ингредиент {index} в корзину")
     def drag_ingredient_to_basket(self, index: int = 0):
+        self.wait_element_visible(MainPageLocators.INGREDIENT_CARD, timeout=10)
+
         cards = self.find_all(MainPageLocators.INGREDIENT_CARD)
+        if not cards:
+            raise AssertionError("На странице нет ни одного ингредиента")
+        if index >= len(cards):
+            raise AssertionError(
+                f"Индекс {index} вне диапазона: ингредиентов {len(cards)}"
+            )
+
         basket = self.find(MainPageLocators.BASKET)
 
         js = """

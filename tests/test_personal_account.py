@@ -10,13 +10,13 @@ class TestPersonalAccount:
 
     @allure.title("Переход по клику на «Личный кабинет»")
     def test_go_to_profile_from_main(self, authorized_driver):
-        main_page = MainPage(authorized_driver)
-        profile_page = ProfilePage(authorized_driver)
+        main = MainPage(authorized_driver)
+        profile = ProfilePage(authorized_driver)
 
-        main_page.go_to_profile()
+        main.go_to_profile()
 
-        assert profile_page.is_loaded(), \
-            "Не открылся личный кабинет"
+        assert profile.is_loaded(), \
+            "Личный кабинет не открылся"
 
     @allure.title("Переход в раздел «История заказов»")
     def test_go_to_order_history(self, authorized_driver):

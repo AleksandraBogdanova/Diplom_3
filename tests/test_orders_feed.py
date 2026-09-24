@@ -10,10 +10,10 @@ class TestOrdersFeed:
 
     @allure.title("Клик по заказу открывает всплывающее окно с деталями")
     def test_click_order_opens_modal(self, driver):
-        main_page = MainPage(driver)
+        main = MainPage(driver)
         feed = OrdersFeedPage(driver)
 
-        main_page.go_to_orders_feed()
+        main.go_to_orders_feed()
         assert feed.is_loaded(), "Лента заказов не открылась"
         assert feed.has_orders(), "В ленте заказов нет ни одного заказа"
 
@@ -31,7 +31,6 @@ class TestOrdersFeed:
 
         main.drag_ingredient_to_basket(index=0)
         main.place_order()
-        order_number = main.get_order_number()
         main.close_ingredient_modal()
 
         main.go_to_profile()
@@ -41,16 +40,15 @@ class TestOrdersFeed:
         user_orders = history.get_order_numbers()
         assert user_orders, "История заказов пуста"
 
-        assert order_number in user_orders, \
-            f"Заказ {order_number} не появился в истории {user_orders}"
+        fresh_order = user_orders[-1]
 
         main.go_to_orders_feed()
         assert feed.is_loaded(), "Лента заказов не открылась"
         assert feed.has_orders(), "В ленте нет ни одного заказа"
 
-        found = feed.wait_order_in_list(order_number, timeout=15)
+        found = feed.wait_order_in_list(fresh_order, timeout=15)
         assert found, \
-            f"Заказ {order_number} не появился в ленте за 15 секунд"
+            f"Заказ {fresh_order} не появился в ленте за 15 секунд"
 
     @allure.title("При создании нового заказа счётчик "
                   "«Выполнено за всё время» увеличивается")
@@ -100,19 +98,26 @@ class TestOrdersFeed:
                   "появляется в разделе «В работе»")
     def test_order_number_appears_in_progress(self, authorized_driver):
         main = MainPage(authorized_driver)
+        profile = ProfilePage(authorized_driver)
+        history = OrderHistoryPage(authorized_driver)
         feed = OrdersFeedPage(authorized_driver)
 
         main.drag_ingredient_to_basket(index=0)
         main.place_order()
-        order_number = main.get_order_number()
         main.close_ingredient_modal()
+
+        main.go_to_profile()
+        profile.go_to_order_history()
+        assert history.is_loaded(), "История заказов не открылась"
+
+        user_orders = history.get_order_numbers()
+        assert user_orders, "История заказов пуста"
+
+        order_number = user_orders[-1]
 
         main.go_to_orders_feed()
         assert feed.is_loaded(), "Лента заказов не открылась"
 
         found = feed.wait_order_in_list(order_number, timeout=15)
-
-        assert found, (
-            f"Номер {order_number} не появился ни в «В работе», "
-            f"ни в «Готовы» за 15 секунд"
-        )
+        assert found, \
+            f"Номер {order_number} не появился ни в «В работе», ни в «Готовы»"

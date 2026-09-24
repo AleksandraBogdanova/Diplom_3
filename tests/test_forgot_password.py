@@ -1,8 +1,9 @@
 import allure
+from config import TEST_EMAIL
 from pages.main_page import MainPage
 from pages.login_page import LoginPage
 from pages.forgot_password_page import ForgotPasswordPage
-from tests.conftest import TEST_EMAIL
+
 
 @allure.feature("Восстановление пароля")
 class TestForgotPassword:

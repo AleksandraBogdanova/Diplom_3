@@ -20,15 +20,15 @@ class MainPageLocators:
     FILLINGS_TAB = (By.XPATH, "//span[text()='Начинки']")
     INGREDIENT_CARD = (By.CSS_SELECTOR, "[class*='BurgerIngredient_ingredient']")
     INGREDIENT_COUNTER = (By.CSS_SELECTOR, "[class*='counter_counter__num']")
-    BASKET = (By.CSS_SELECTOR, "[class*='BurgerConstructor_basket__list']")
-    ORDER_BUTTON = (By.XPATH, "//button[text()='Оформить заказ']")
+    BASKET = (By.CSS_SELECTOR, "section[class*='BurgerConstructor_basket']")
     LOGIN_BUTTON = (By.XPATH, "//button[text()='Войти в аккаунт']")
     INGREDIENT_MODAL = (By.CSS_SELECTOR, "[class*='Modal_modal__contentBox']")
     INGREDIENT_MODAL_CLOSE = (By.CSS_SELECTOR, "[class*='Modal_modal__close']")
     ORDER_NUMBER = (
         By.CSS_SELECTOR,
-        "[class*='Modal_modal__contentBox'] h2[class*='Modal_modal__title']"
+        "[class*='Modal_orderBox'] p.text_type_digits-default"
     )
+    ORDER_BUTTON = (By.XPATH, "//button[text()='Оформить заказ']")
 
 
 class LoginPageLocators:
@@ -60,8 +60,8 @@ class ProfilePageLocators:
 
 
 class OrderHistoryPageLocators:
-    ORDER_ITEMS = (By.CSS_SELECTOR, "[class*='OrderHistory_listItem']")
-    ORDER_LINKS = (By.CSS_SELECTOR, "[class*='OrderHistory_link']")
+        ORDER_ITEMS = (By.CSS_SELECTOR, "[class*='OrderHistory_listItem']")
+        ORDER_LINKS = (By.CSS_SELECTOR, "[class*='OrderHistory_link']")
 
 
 class OrdersFeedPageLocators:
@@ -69,6 +69,7 @@ class OrdersFeedPageLocators:
     ORDER_CARD = (By.CSS_SELECTOR, "[class*='OrderFeed_list'] > li")
     ORDER_LINK = (By.CSS_SELECTOR, "[class*='OrderFeed_list'] > li a")
     ORDER_LISTS = (By.CSS_SELECTOR, "[class*='OrderFeed_orderList']")
+    ORDER_LIST_ITEMS = (By.TAG_NAME, "li")
 
     TOTAL_COMPLETED_COUNTER = (
         By.XPATH,
