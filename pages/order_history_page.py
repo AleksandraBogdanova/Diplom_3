@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 from locators import OrderHistoryPageLocators
 from .base_page import BasePage
 import allure
@@ -24,8 +23,7 @@ class OrderHistoryPage(BasePage):
         numbers = []
         for link in self.find_all(OrderHistoryPageLocators.ORDER_LINKS):
             elements = link.find_elements(
-                By.CSS_SELECTOR,
-                "p[class*='text_type_digits-default']"
+                *OrderHistoryPageLocators.ORDER_NUMBER
             )
             for el in elements:
                 text = el.text.strip()

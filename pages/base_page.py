@@ -30,6 +30,14 @@ class BasePage:
         except TimeoutException:
             return False
 
+    @allure.step("Ждать, что URL изменится")
+    def wait_url_changes(self, timeout: int = 10) -> bool:
+        current_url = self.driver.current_url
+        return self.wait_until(
+            lambda d: d.current_url != current_url,
+            timeout=timeout,
+        )
+
     @allure.step("Найти элемент: {locator}")
     def find(self, locator):
         return self.wait.until(EC.presence_of_element_located(locator))

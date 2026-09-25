@@ -60,8 +60,10 @@ class ProfilePageLocators:
 
 
 class OrderHistoryPageLocators:
-        ORDER_ITEMS = (By.CSS_SELECTOR, "[class*='OrderHistory_listItem']")
-        ORDER_LINKS = (By.CSS_SELECTOR, "[class*='OrderHistory_link']")
+    ORDER_ITEMS = (By.CSS_SELECTOR, "[class*='OrderHistory_listItem']")
+    ORDER_LINKS = (By.CSS_SELECTOR, "[class*='OrderHistory_link']")
+    ORDER_NUMBER = (By.CSS_SELECTOR, "p[class*='text_type_digits-default']")
+    ORDER_LIST_ITEMS = (By.CSS_SELECTOR, "p[class*='text_type_digits-default']")
 
 
 class OrdersFeedPageLocators:
